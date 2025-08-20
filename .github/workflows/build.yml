@@ -23,21 +23,73 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Create app directory
+        run: mkdir -p app
+
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+          # تعيين صلاحيات آمنة للملف
+          chmod 600 app/keystore.jks
+
+      - name: Verify Keystore and List Aliases
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo "🔍 التحقق من وجود ملف keystore..."
+          if [ -f "app/keystore.jks" ]; then
+            echo "✅ تم العثور على ملف keystore"
+            echo "📋 قائمة الـ Aliases المتاحة:"
+            keytool -list -keystore app/keystore.jks -storepass "$STORE_PASSWORD" -v | grep "Alias name:" || echo "❌ فشل في قراءة الـ aliases"
+            
+            echo "🔎 التحقق من وجود الـ alias المطلوب: $KEY_ALIAS"
+            if keytool -list -keystore app/keystore.jks -storepass "$STORE_PASSWORD" -alias "$KEY_ALIAS" >/dev/null 2>&1; then
+              echo "✅ تم العثور على الـ alias: $KEY_ALIAS"
+            else
+              echo "❌ الـ alias '$KEY_ALIAS' غير موجود في keystore!"
+              echo "📝 الـ Aliases المتوفرة:"
+              keytool -list -keystore app/keystore.jks -storepass "$STORE_PASSWORD"
+              exit 1
+            fi
+          else
+            echo "❌ ملف keystore.jks غير موجود!"
+            exit 1
+          fi
 
       - name: Build Release APK
         env:
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --info
+
+      - name: Find and Upload APK
+        run: |
+          # البحث عن ملف APK بأي اسم (للتأكد من العثور عليه)
+          APK_FILE=$(find . -name "*.apk" -path "*/release/*" | head -1)
+          if [ -f "$APK_FILE" ]; then
+            echo "✅ تم العثور على ملف APK: $APK_FILE"
+            echo "APK_PATH=$APK_FILE" >> $GITHUB_ENV
+          else
+            echo "❌ لم يتم العثور على أي ملف APK!"
+            find . -name "*.apk" || echo "لا توجد ملفات APK"
+            exit 1
+          fi
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: Al-Shamri-Currency-Converter-Release
-          path: app/build/outputs/apk/release/app-release.apk
+          path: ${{ env.APK_PATH }}
+
+      - name: Show Build Info
+        if: always()
+        run: |
+          echo "📊 ملخص العملية:"
+          echo "-----------------"
+          echo "الـ Alias المستخدم: ${{ secrets.KEY_ALIAS }}"
+          echo "حجم ملف keystore: $(du -h app/keystore.jks 2>/dev/null || echo 'غير موجود')"
+          echo "الـ APK الناتج: ${{ env.APK_PATH }}"
