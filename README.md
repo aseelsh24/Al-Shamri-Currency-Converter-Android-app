@@ -57,7 +57,7 @@ To build a signed release APK, you must first generate a keystore file and then 
 Place the generated `keystore.jks` file inside the `app/` directory of the project. Use the following command to generate it:
 
 ```bash
-keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias Al-Shamri
+keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 9125 -alias Al-Shamri
 ```
 You will be prompted to enter a store password and a key password. Remember these for the next step.
 
