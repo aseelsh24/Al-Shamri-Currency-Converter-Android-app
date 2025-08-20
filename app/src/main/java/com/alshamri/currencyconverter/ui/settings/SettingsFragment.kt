@@ -70,7 +70,7 @@ class SettingsFragment : Fragment() {
             val updatedRates = settingsAdapter.getUpdatedRates()
             if (updatedRates.isNotEmpty()) {
                 viewModel.updateRates(updatedRates)
-                Snackbar.make(view, getString(R.string.rates_updated_successfully), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, getString(R.string.rates_updated_successfully), Snackbar.LENGTH_SHORT).show()
             }
             findNavController().navigateUp()
         }

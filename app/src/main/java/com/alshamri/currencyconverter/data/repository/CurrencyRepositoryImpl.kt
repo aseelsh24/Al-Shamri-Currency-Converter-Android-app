@@ -4,7 +4,6 @@ import com.alshamri.currencyconverter.data.local.CurrencyDao
 import com.alshamri.currencyconverter.data.local.CurrencyRate
 import com.alshamri.currencyconverter.domain.repository.CurrencyRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 class CurrencyRepositoryImpl(
     private val dao: CurrencyDao
