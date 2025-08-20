@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Al-Shamri Currency Converter</string>
+
+    <!-- Main Screen -->
+    <string name="amount">Amount</string>
+    <string name="from_currency">From</string>
+    <string name="to_currency">To</string>
+    <string name="swap_currencies">Swap Currencies</string>
+    <string name="result_placeholder">--.--</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Exchange Rates</string>
+    <string name="settings_subtitle">Rates are relative to 1 USD</string>
+    <string name="save">Save</string>
+    <string name="rates_updated_successfully">Rates updated successfully</string>
+
+    <!-- History -->
+    <string name="conversion_history_title">Recent Conversions</string>
+    <string name="no_history_yet">No conversions recorded yet.</string>
+
+    <!-- Theme Picker -->
+    <string name="theme">Theme</string>
+    <string name="light_mode">Light</string>
+    <string name="dark_mode">Dark</string>
+    <string name="system_default">System</string>
+</resources>
