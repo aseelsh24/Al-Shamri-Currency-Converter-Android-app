@@ -1,7 +1,6 @@
 package com.alshamri.currencyconverter.di
 
 import android.app.Application
-import android.app.Application
 import com.alshamri.currencyconverter.data.local.AppDatabase
 import com.alshamri.currencyconverter.data.repository.CurrencyRepositoryImpl
 import com.alshamri.currencyconverter.data.repository.HistoryRepositoryImpl
