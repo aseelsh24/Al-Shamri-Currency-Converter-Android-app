@@ -32,8 +32,6 @@ android {
 
     buildTypes {
         release {
-            @Suppress("DEPRECATION")
-            useProguard = false // Suppress deprecation warning
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
